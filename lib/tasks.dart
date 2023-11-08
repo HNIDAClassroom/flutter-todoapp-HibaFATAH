@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist_app/models/task.dart';
+import 'package:todolist_app/services/firestore.dart';
 import 'package:todolist_app/widgets/new_task.dart';
 
 import 'tasks_list.dart';
@@ -14,6 +15,7 @@ class Tasks extends StatefulWidget {
 }
 
 class _TasksState extends State<Tasks> {
+  final FirestoreService firestoreService = FirestoreService();
   final List<Task> _registeredTasks = [
     Task(
       title: 'Apprendre Flutter',
@@ -42,11 +44,11 @@ class _TasksState extends State<Tasks> {
     );
   }
 
-  Future<void> _addTask(Task task) async {
-    await Future.delayed(Duration(seconds: 2));
-
+  void _addTask(Task task) {
     setState(() {
       _registeredTasks.add(task);
+      firestoreService.addTask(task);
+      Navigator.pop(context);
     });
   }
 

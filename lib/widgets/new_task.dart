@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../models/task.dart';
 
 class NewTask extends StatefulWidget {
@@ -15,22 +16,23 @@ class NewTask extends StatefulWidget {
 class _NewTaskState extends State<NewTask> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  DateTime? _selectedDate; // Utilisez DateTime? pour gérer une date potentielle
   Category _selectedCategory = Category.personal;
+
   @override
   void dispose() {
     _titleController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
   void _submitTaskData() {
-    if ((_titleController.text.trim().isEmpty) ||
-        (_descriptionController.text.trim().isEmpty)) {
+    if (_titleController.text.trim().isEmpty || _descriptionController.text.trim().isEmpty) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Erreur'),
-          content: const Text(
-              'Merci de saisir le titre de la tâche à ajouter dans la liste'),
+          content: const Text('Merci de saisir le titre de la tâche à ajouter dans la liste'),
           actions: [
             TextButton(
               onPressed: () {
@@ -43,11 +45,32 @@ class _NewTaskState extends State<NewTask> {
       );
       return;
     }
+
+    if (_selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Erreur'),
+          content: const Text('Merci de sélectionner une date pour la tâche'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     widget.onAddTask(Task(
-        title: _titleController.text,
-        description: _descriptionController.text,
-        date: DateTime(2023, 10, 16, 14, 30),
-        category: _selectedCategory));
+      title: _titleController.text,
+      description: _descriptionController.text,
+      date: _selectedDate!, // Utilisez ! pour accéder à la valeur non nulle
+      category: _selectedCategory,
+    ));
   }
 
   @override
@@ -63,13 +86,38 @@ class _NewTaskState extends State<NewTask> {
               labelText: 'Task title',
             ),
           ),
+          SizedBox(height: 5,),
           TextField(
             controller: _descriptionController,
             maxLength: 50,
             decoration: InputDecoration(
-              labelText: 'Task title',
+              labelText: 'Task description',
             ),
           ),
+          SizedBox(height: 10,),
+          GestureDetector(
+            onTap: () async {
+              DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2101),
+              );
+
+              if (pickedDate != null) {
+                setState(() {
+                  _selectedDate = pickedDate; // Assurez-vous que _selectedDate est mis à jour
+                });
+              }
+            },
+            child: Row(
+              children: [
+                Icon(Icons.calendar_today),
+                Text('Date sélectionnée: ${_selectedDate != null ? DateFormat('yyyy-MM-dd').format(_selectedDate!) : "Non sélectionnée"}'),
+              ],
+            ),
+          ),
+          SizedBox(height: 15,),
           Row(
             children: [
               DropdownButton<Category>(
@@ -79,8 +127,7 @@ class _NewTaskState extends State<NewTask> {
                     .map((category) => DropdownMenuItem<Category>(
                           value: category,
                           child: Text(
-                            category.name
-                                .toUpperCase(), // Remplacez cette couleur par celle que vous souhaitez
+                            category.name.toUpperCase(),
                           ),
                         ))
                     .toList(),
@@ -93,10 +140,10 @@ class _NewTaskState extends State<NewTask> {
                     _selectedCategory = value;
                   });
                 },
-              ),
+              ), SizedBox(width: 10,),
               ElevatedButton(
                 onPressed: () {
-                 _submitTaskData();
+                  _submitTaskData();
                   print(_titleController.text);
                 },
                 child: const Text('Enregistrer'),

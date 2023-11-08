@@ -10,12 +10,15 @@ class Task {
     required this.description,
     required this.date,
     required this.category,
+     this.isCompleted = false,
+
   }) : id = uuid.v4();
 
   final String id;
-  final String title;
-  final String description;
-  final DateTime date;
-  final Category category;
+  late final String title;
+  late final String description;
+  late final DateTime date;
+  late final Category category;
+  bool isCompleted;
 }
 // 
