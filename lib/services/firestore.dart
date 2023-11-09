@@ -9,6 +9,7 @@ class FirestoreService {
         'taskTitle': task.title.toString(),
         'taskDesc': task.description.toString(),
         'taskCategory': task.category.toString(),
+       // 'taskDate': task.date.toString(),
          'isCompleted':  false,
       },
     );
@@ -29,9 +30,9 @@ class FirestoreService {
   return FirebaseFirestore.instance.collection('tasks').where('taskTitle', isEqualTo: title).get().then((querySnapshot) {
     querySnapshot.docs.forEach((document) {
       document.reference.update({
-        'taskTitle': updatedTask.title.toString(),
+        /*'taskTitle': updatedTask.title.toString(),
         'taskDesc': updatedTask.description.toString(),
-        'taskCategory': updatedTask.category.toString(),
+        'taskCategory': updatedTask.category.toString(),*/
         'isCompleted': updatedTask.isCompleted,
       });
     });

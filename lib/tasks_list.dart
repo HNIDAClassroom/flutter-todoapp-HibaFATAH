@@ -19,64 +19,66 @@ class TasksList extends StatelessWidget {
 itemBuilder: (ctx, index) => TaskItem((tasks[index]),
     ));
   }*/
- Widget build(BuildContext context) {
-  return StreamBuilder<QuerySnapshot>(
-    stream: firestoreService.getTasks(),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        final taskLists = snapshot.data!.docs;
-        List<Task> taskItems = [];
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: firestoreService.getTasks(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final taskLists = snapshot.data!.docs;
+          List<Task> taskItems = [];
 
-        for (int index = 0; index < taskLists.length; index++) {
-          DocumentSnapshot document = taskLists[index];
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          String title = data['taskTitle'] ?? ''; // Handle potential null value
-          String description = data['taskDesc'] ?? ''; // Handle potential null value
-         DateTime date;
-if (data['taskDate'] != null) {
-  date = DateTime.parse(data['taskDate']);
-} else {
-  date = DateTime.now(); // Utilisez la date actuelle comme valeur par défaut
-} // Handle potential null value
-          String categoryString = data['taskCategory'] ?? 'others'; // Handle potential null value
+          for (int index = 0; index < taskLists.length; index++) {
+            DocumentSnapshot document = taskLists[index];
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            String title =
+                data['taskTitle'] ?? ''; // Handle potential null value
+            String description =
+                data['taskDesc'] ?? ''; // Handle potential null value
+            DateTime date;
+            if (data['taskDate'] != null) {
+              date = DateTime.parse(data['taskDate']);
+            } else {
+              date = DateTime
+                  .now(); // Utilisez la date actuelle comme valeur par défaut
+            } // Handle potential null value
+            String categoryString =
+                data['taskCategory'] ?? 'others'; // Handle potential null value
 
-          Category category;
-          switch (categoryString) {
-            case 'personal':
-              category = Category.personal;
-              break;
-            case 'work':
-              category = Category.work;
-              break;
-            case 'shopping':
-              category = Category.shopping;
-              break;
-            default:
-              category = Category.others;
+            Category category;
+            switch (categoryString) {
+              case 'Category.personal':
+                category = Category.personal;
+                break;
+              case 'Category.work':
+                category = Category.work;
+                break;
+              case 'Category.shopping':
+                category = Category.shopping;
+                break;
+              default:
+                category = Category.others;
+            }
+            Task task = Task(
+              title: title,
+              description: description,
+              date: date,
+              category: category,
+            );
+            taskItems.add(task);
           }
-          Task task = Task(
-            title: title,
-            description: description,
-            date: date,
-            category: category,
+
+          return ListView.builder(
+            itemCount: taskItems.length,
+            itemBuilder: (ctx, index) {
+              return TaskItem(taskItems[index]);
+            },
           );
-          taskItems.add(task);
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return CircularProgressIndicator(); // Display a loading indicator while waiting for data.
         }
-
-        return ListView.builder(
-          itemCount: taskItems.length,
-          itemBuilder: (ctx, index) {
-            return TaskItem(taskItems[index]);
-          },
-        );
-      } else if (snapshot.hasError) {
-        return Text('Error: ${snapshot.error}');
-      } else {
-        return CircularProgressIndicator(); // Display a loading indicator while waiting for data.
-      }
-    },
-  );
-}
-
-
+      },
+    );
+  }
 }
