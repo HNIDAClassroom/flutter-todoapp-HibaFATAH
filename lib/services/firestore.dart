@@ -9,7 +9,7 @@ class FirestoreService {
         'taskTitle': task.title.toString(),
         'taskDesc': task.description.toString(),
         'taskCategory': task.category.toString(),
-       // 'taskDate': task.date.toString(),
+        'taskDate': task.date.toString(),
          'isCompleted':  false,
       },
     );

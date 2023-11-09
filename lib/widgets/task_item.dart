@@ -5,26 +5,29 @@ import 'package:intl/intl.dart';
 
 class TaskItem extends StatefulWidget {
   final Task task;
+  final bool isCompleted;
 
-  TaskItem(this.task, {Key? key}) : super(key: key);
+  TaskItem(this.task, {Key? key, required this.isCompleted}) : super(key: key);
 
   @override
   _TaskItemState createState() => _TaskItemState();
 }
 
 class _TaskItemState extends State<TaskItem> {
- // bool isCompleted ;
+  bool isCompleted = false;
 
-  @override
+ /* @override
   void initState() {
     super.initState();
-   // isCompleted = widget.task.isCompleted;
-   // print("isCompleted dans initState : $isCompleted");
-  }
+    //isCompleted = widget.task.isCompleted;
+    // print("isCompleted dans initState : $isCompleted");
+  }*/
+
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      key: ValueKey(widget.task.id),
       margin: EdgeInsets.all(16.0),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -33,19 +36,16 @@ class _TaskItemState extends State<TaskItem> {
             Row(
               children: [
                 Checkbox(
-                  value: widget.task.isCompleted,
+                  value: widget.task.isCompleted ?? false,
                   onChanged: (value) {
                     setState(() {
-                      
-                     // widget.task.isCompleted = value ?? false;
-                      
+                      widget.task.isCompleted = value ?? false;
                     });
-                    // Mettre à jour l'état de la tâche lorsque la case à cocher est cochée ou décochée
-                   // widget.task.isCompleted = isCompleted;
-                    FirestoreService().updateTaskByTitle(widget.task.title, widget.task);
-                    print(
-                        "ID de la tâche à mettre à jour 22: ${widget.task.id}");
-                    
+                    // Update the task in Firestore
+                    FirestoreService()
+                        .updateTaskByTitle(widget.task.title, widget.task);
+
+                    print("ID de la tâche à mettre à jour: ${widget.task.id}");
                   },
                 ),
                 Flexible(
@@ -63,10 +63,12 @@ class _TaskItemState extends State<TaskItem> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        widget.task.description,
+                        widget.task.title,
                         style: TextStyle(
-                          decoration:
-                              widget.task.isCompleted ? TextDecoration.lineThrough : null,
+                          fontWeight: FontWeight.bold,
+                          decoration: widget.task.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
                         ),
                       ),
                     ],

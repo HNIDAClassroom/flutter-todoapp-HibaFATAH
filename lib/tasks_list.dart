@@ -70,7 +70,7 @@ itemBuilder: (ctx, index) => TaskItem((tasks[index]),
           return ListView.builder(
             itemCount: taskItems.length,
             itemBuilder: (ctx, index) {
-              return TaskItem(taskItems[index]);
+              return TaskItem(taskItems[index], isCompleted: tasks[index].isCompleted);
             },
           );
         } else if (snapshot.hasError) {
