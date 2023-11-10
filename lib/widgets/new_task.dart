@@ -70,6 +70,7 @@ class _NewTaskState extends State<NewTask> {
       description: _descriptionController.text,
       date: _selectedDate!, // Utilisez ! pour accéder à la valeur non nulle
       category: _selectedCategory,
+    isCompleted:false,
     ));
   }
 

@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(elevation: 0),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: AuthVerify(),
     );
   }

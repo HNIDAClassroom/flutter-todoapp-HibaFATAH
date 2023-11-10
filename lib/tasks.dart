@@ -22,18 +22,24 @@ class _TasksState extends State<Tasks> {
       description: 'Suivre le cours pour apprendre de nouvelles compétences',
       date: DateTime.now(),
       category: Category.work,
+      isCompleted:false,
     ),
     Task(
       title: 'Faire les courses',
       description: 'Acheter des provisions pour la semaine',
       date: DateTime.now().subtract(Duration(days: 1)),
       category: Category.shopping,
+            isCompleted:false,
+
+
     ),
     Task(
       title: 'Rediger un CR',
       description: '',
       date: DateTime.now().subtract(Duration(days: 2)),
       category: Category.personal,
+            isCompleted:false,
+
     ),
     // Add more tasks with descriptions as needed
   ];

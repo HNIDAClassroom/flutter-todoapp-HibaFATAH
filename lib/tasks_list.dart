@@ -41,8 +41,9 @@ itemBuilder: (ctx, index) => TaskItem((tasks[index]),
               date = DateTime
                   .now(); // Utilisez la date actuelle comme valeur par défaut
             } // Handle potential null value
-            String categoryString =
-                data['taskCategory'] ?? 'others'; // Handle potential null value
+            String categoryString = data['taskCategory'] ?? 'others';
+            bool isCompleted =
+                data['isCompleted']; // Handle potential null value
 
             Category category;
             switch (categoryString) {
@@ -63,6 +64,7 @@ itemBuilder: (ctx, index) => TaskItem((tasks[index]),
               description: description,
               date: date,
               category: category,
+              isCompleted: isCompleted,
             );
             taskItems.add(task);
           }
@@ -70,7 +72,8 @@ itemBuilder: (ctx, index) => TaskItem((tasks[index]),
           return ListView.builder(
             itemCount: taskItems.length,
             itemBuilder: (ctx, index) {
-              return TaskItem(taskItems[index], isCompleted: tasks[index].isCompleted);
+              return TaskItem(taskItems[index],
+                  isCompleted: tasks[index].isCompleted);
             },
           );
         } else if (snapshot.hasError) {

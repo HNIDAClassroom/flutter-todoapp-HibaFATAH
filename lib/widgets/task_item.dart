@@ -26,7 +26,16 @@ class _TaskItemState extends State<TaskItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade200, Colors.blue.shade500],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Card(
+
       key: ValueKey(widget.task.id),
       margin: EdgeInsets.all(16.0),
       child: Padding(
@@ -130,6 +139,7 @@ class _TaskItemState extends State<TaskItem> {
           ],
         ),
       ),
+    ),
     );
   }
 }

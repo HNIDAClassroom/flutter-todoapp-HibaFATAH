@@ -10,7 +10,7 @@ class Task {
     required this.description,
     required this.date,
     required this.category,
-     this.isCompleted = false,
+     required this.isCompleted,
 
   }) : id = uuid.v4();
 
